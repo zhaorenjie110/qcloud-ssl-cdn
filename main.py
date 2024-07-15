@@ -188,18 +188,36 @@ def process_domain_config(secret_id, secret_key, domain, cert_id):
     配置域名的CDN、EO、SSL、URL刷新等功能
     '''
     if config.UPDATE_SSL:
-        run_config_cdn(secret_id, secret_key, domain, cert_id)
+        try:
+            run_config_ecdn(secret_id, secret_key, domain, cert_id)
+        except Exception as e:
+            print("全站加速网络配置失败,跳过本配置")
     if config.ENABLE_HSTS or config.ENABLE_OCSP or config.ENABLE_HTTP2:
-        https_options_enabler(secret_id, secret_key, domain, config.ENABLE_HTTP2, config.ENABLE_HSTS,
-                              config.HSTS_TIMEOUT_AGE, config.HSTS_INCLUDE_SUBDOMAIN, config.ENABLE_OCSP)
+        try:
+            https_options_enabler(secret_id, secret_key, domain, config.ENABLE_HTTP2, config.ENABLE_HSTS,
+                                          config.HSTS_TIMEOUT_AGE, config.HSTS_INCLUDE_SUBDOMAIN, config.ENABLE_OCSP)
+        except Exception as e:
+            print("CDN配置失败,跳过本配置")
     if config.DELETE_OLD_CERTS:
-        delete_old_ssls(secret_id, secret_key, domain, cert_id)
+        try:
+            delete_old_ssls(secret_id, secret_key, domain, cert_id)
+        except Exception as e:
+            print("删除旧证书失败,跳过本配置")
     if config.PUSH_URL:
-        run_url_push(secret_id, secret_key, domain, config.URLS_FILE)
+        try:
+            run_url_push(secret_id, secret_key, domain, config.URLS_FILE)
+        except Exception as e:
+            print("URL预热失败,跳过本配置")
     if config.PURGE_URL:
-        run_purge_url(secret_id, secret_key, domain, config.URLS_FILE)
+        try:
+            run_purge_url(secret_id, secret_key, domain, config.URLS_FILE)
+        except Exception as e:
+            print("URL刷新失败,跳过本配置")
     if config.ZONE_ID:
-        run_config_teo(secret_id, secret_key, config.ZONE_ID, domain, cert_id)
+        try:
+            run_config_teo(secret_id, secret_key, config.ZONE_ID, domain, cert_id)
+        except Exception as e:
+            print("EO配置失败,跳过本配置")
 
 def get_cdn_domains(secret_id, secret_key, cert_id):
     '''
