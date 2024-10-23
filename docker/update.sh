@@ -30,10 +30,10 @@ cat>${WORK_DIR}/config.py<<-EOF
 # acme.sh --issue  -d "blog.whuzfb.cn" --dns dns_dp
 
 # 使用ACME申请的SSL完整证书的本地存放路径
-CER_FILE = "${CERT_HOME}/${ACME_DOMAIN}/fullchain.cer"
+CER_FILE = "${CERT_HOME}/${ACME_DOMAIN}_ecc/fullchain.cer"
 
 # 使用ACME申请的SSL证书私钥的本地存放路径
-KEY_FILE = "${CERT_HOME}/${ACME_DOMAIN}/${ACME_DOMAIN}.key"
+KEY_FILE = "${CERT_HOME}/${ACME_DOMAIN}_ecc/${ACME_DOMAIN}.key"
 
 # CDN服务配置的域名（需要提前在腾讯云网页前端创建）
 # 如果ACME申请的证书为泛域名证书，且要配置多个CDN加速
